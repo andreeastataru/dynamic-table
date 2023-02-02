@@ -1,0 +1,18 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid #d3d3d3;
+}
+
+thead {
+  background-color: #cfe6e8;
+}
+
+td {
+  padding: 10px 20px;
+}
