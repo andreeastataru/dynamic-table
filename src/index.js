@@ -9,11 +9,11 @@
 fetch("http://localhost:3000/teams-json", {
   method: "GET", //cer datele
   headers: {
-    "Content-type": "application/json", //precizam ca raspunsul serverului va fi in format json
-  },
+    "Content-type": "application/json" //precizam ca raspunsul serverului va fi in format json
+  }
 })
-  .then((r) => r.json())
-  .then((teams) => {
+  .then(r => r.json())
+  .then(teams => {
     displayTeams(teams);
   });
 
@@ -21,7 +21,7 @@ function displayTeams(teams) {
   //console.info("r1", teams);
   const teamsHTML = teams.map(
     //primesc un json si il transform in string
-    (team) => ` 
+    team => ` 
         <tr>
             <td>${team.promotion}</td>
             <td>${team.members}</td>
@@ -46,7 +46,7 @@ function onSubmit(e) {
     //se va efectua doar cand dau click pe submit
     method: "POST", //cum transmit date
     headers: {
-      "Content-Type": "application/json", //in ce format transmit date
+      "Content-Type": "application/json" //in ce format transmit date
     },
     body: JSON.stringify({
       //impachetez obiectul ca sa se creeze o echipa noua//ce pun in post//ii dau json
@@ -54,12 +54,12 @@ function onSubmit(e) {
       //trimit valoarea din elementul html
       members: document.getElementById("members").value,
       name: document.getElementById("name").value,
-      url: document.getElementById("url").value,
-    }),
+      url: document.getElementById("url").value
+    })
   })
     //1. Facem requestul => 2. Convertim la json => 3. Asteptam raspunsul care este un status
-    .then((r) => r.json())
-    .then((status) => {
+    .then(r => r.json())
+    .then(status => {
       //console.warn("status", status);//primim un status si un id
       if (status.success) {
         //daca statusul este true
@@ -73,9 +73,9 @@ function removeTeamRequest(id) {
   fetch("http://localhost:3000/teams-json/delete", {
     method: "DELETE",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify({ id }),
+    body: JSON.stringify({ id })
   });
 }
 
