@@ -8,11 +8,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <form
-      id="editForm"
-      action="http://localhost:3000/teams-json/create"
-      method="POST"
-    >
+    <form id="editForm" action="http://localhost:3000/teams-json/create" method="POST">
       <table id="teams">
         <thead>
           <tr>
@@ -27,40 +23,16 @@
         <tfoot>
           <tr>
             <td>
-              <input
-                placeholder="Enter group"
-                type="text"
-                name="promotion"
-                id="promotion"
-                required
-              />
+              <input placeholder="Enter group" type="text" name="promotion" id="promotion" required />
             </td>
             <td>
-              <input
-                placeholder="Enter members"
-                type="text"
-                name="members"
-                id="members"
-                required
-              />
+              <input placeholder="Enter members" type="text" name="members" id="members" required />
             </td>
             <td>
-              <input
-                placeholder="Enter name"
-                type="text"
-                name="name"
-                id="name"
-                required
-              />
+              <input placeholder="Enter name" type="text" name="name" id="name" required />
             </td>
             <td>
-              <input
-                placeholder="Enter url"
-                type="text"
-                name="url"
-                id="url"
-                required
-              />
+              <input placeholder="Enter url" type="text" name="url" id="url" required />
             </td>
             <td>
               <button type="submit">💾</button>
@@ -69,6 +41,5 @@
         </tfoot>
       </table>
     </form>
-    <script src="index.js"></script>
   </body>
 </html>
