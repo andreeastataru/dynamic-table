@@ -26,6 +26,8 @@ function deleteTeamRequest(id) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ id })
+  }).then(r => {
+    return r.json();
   });
 }
 
@@ -87,15 +89,11 @@ function initEvents() {
   document.querySelector("#teams tbody").addEventListener("click", e => {
     if (e.target.matches("a")) {
       const id = e.target.dataset.id;
-      const promise = deleteTeamRequest(id);
-      promise
-        .then(r => {
-          return r.json();
-        })
-        .then(s => {
-          console.info("s", s);
+      deleteTeamRequest(id).then(s => {
+        if (s.success) {
           window.location.reload();
-        });
+        }
+      });
     }
   });
 }
