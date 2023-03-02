@@ -17,6 +17,18 @@ fetch("http://localhost:3000/teams-json", {
     displayTeams(teams);
   });
 
+function deleteTeamRequest(id) {
+  // DELETE teams-json/delete
+  return fetch("http://localhost:3000/teams-json/delete", {
+    //punem return ca sa ne dea raspunsul de la server, nu doar sa faca fetch-ul
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id })
+  });
+}
+
 function displayTeams(teams) {
   //console.info("r1", teams);
   const teamsHTML = teams.map(
@@ -28,7 +40,7 @@ function displayTeams(teams) {
             <td>${team.name}</td>
             <td>${team.url}</td>
             <td>
-              <a>✖</a>
+              <a data-id="${team.id}">✖</a>
             </td>
         </tr>`
   );
@@ -68,20 +80,24 @@ function onSubmit(e) {
     });
 }
 
-function removeTeamRequest(id) {
-  // DELETE teams-json/delete
-  fetch("http://localhost:3000/teams-json/delete", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ id })
-  });
-}
-
 function initEvents() {
   const form = document.getElementById("editForm"); //vreau sa ascult formularul
   form.addEventListener("submit", onSubmit); //cand se face submit pe el
+
+  document.querySelector("#teams tbody").addEventListener("click", e => {
+    if (e.target.matches("a")) {
+      const id = e.target.dataset.id;
+      const promise = deleteTeamRequest(id);
+      promise
+        .then(r => {
+          return r.json();
+        })
+        .then(s => {
+          console.info("s", s);
+          window.location.reload();
+        });
+    }
+  });
 }
 
 initEvents();
