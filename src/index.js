@@ -21,7 +21,7 @@ fetch("http://localhost:3000/teams-json", {
     displayTeams(teams);
   });
 
-function createTeamRequest() {
+function createTeamRequest(team) {
   return (
     fetch("http://localhost:3000/teams-json/create", {
       //se va efectua doar cand dau click pe submit
@@ -29,18 +29,22 @@ function createTeamRequest() {
       headers: {
         "Content-Type": "application/json" //in ce format transmit date
       },
-      body: JSON.stringify({
-        //impachetez obiectul ca sa se creeze o echipa noua//ce pun in post//ii dau json
-        promotion: document.getElementById("promotion").value, //ce imi da trebuie sa ii dau si eu inapoi citind din formular
-        //trimit valoarea din elementul html
-        members: document.getElementById("members").value,
-        name: document.getElementById("name").value,
-        url: document.getElementById("url").value
-      })
+      body: JSON.stringify(readTeam())
     })
       //1. Facem requestul => 2. Convertim la json => 3. Asteptam raspunsul care este un status
       .then(r => r.json())
   );
+}
+
+function readTeam() {
+  return {
+    //impachetez obiectul ca sa se creeze o echipa noua//ce pun in post//ii dau json
+    promotion: document.getElementById("promotion").value, //ce imi da trebuie sa ii dau si eu inapoi citind din formular
+    //trimit valoarea din elementul html
+    members: document.getElementById("members").value,
+    name: document.getElementById("name").value,
+    url: document.getElementById("url").value
+  };
 }
 
 function deleteTeamRequest(id) {
@@ -86,7 +90,8 @@ function onSubmit(e) {
   if (editId) {
     console.warn("edit");
   } else {
-    createTeamRequest().then(status => {
+    const team = readTeam();
+    createTeamRequest(team).then(status => {
       //console.warn("status", status);//primim un status si un id
       if (status.success) {
         //daca statusul este true
