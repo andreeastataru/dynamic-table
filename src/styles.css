@@ -11,8 +11,25 @@ td {
 
 thead {
   background-color: #cfe6e8;
+  height: 40px;
 }
 
 td {
   padding: 10px 20px;
+}
+
+input {
+  width: 100%;
+  height: 30px;
+  padding-left: 10px;
+}
+
+.remove-btn:hover,
+.edit-btn:hover {
+  color: #067f89;
+  cursor: pointer;
+}
+
+button:hover {
+  cursor: pointer;
 }
