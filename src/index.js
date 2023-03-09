@@ -5,6 +5,9 @@
     displayTeams(teams);
   });*/
 
+let allTeams = [];
+let editId;
+
 //aduc datele
 fetch("http://localhost:3000/teams-json", {
   method: "GET", //cer datele
@@ -14,6 +17,7 @@ fetch("http://localhost:3000/teams-json", {
 })
   .then(r => r.json())
   .then(teams => {
+    allTeams = teams;
     displayTeams(teams);
   });
 
@@ -47,7 +51,7 @@ function deleteTeamRequest(id) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ id })
+    body: JSON.stringify({ id }) //stringify il transforma in string iar {} in obiect
   }).then(r => {
     return r.json();
   });
@@ -64,7 +68,8 @@ function displayTeams(teams) {
             <td>${team.name}</td>
             <td>${team.url}</td>
             <td>
-              <a data-id="${team.id}">✖</a>
+              <a data-id="${team.id}" class="remove-btn">✖</a>
+              <a data-id="${team.id}" class="edit-btn">&#9998;</a>
             </td>
         </tr>`
   );
@@ -78,27 +83,46 @@ function onSubmit(e) {
   //console.warn("submit", e);
   e.preventDefault(); //nu face ceea ce ar face in mod normal (adica sa faca redirect)
 
-  createTeamRequest().then(status => {
-    //console.warn("status", status);//primim un status si un id
-    if (status.success) {
-      //daca statusul este true
-      window.location.reload(); //browserul va face refresh automat ca sa ne apara noile date
-    }
-  });
+  if (editId) {
+    console.warn("edit");
+  } else {
+    createTeamRequest().then(status => {
+      //console.warn("status", status);//primim un status si un id
+      if (status.success) {
+        //daca statusul este true
+        window.location.reload(); //browserul va face refresh automat ca sa ne apara noile date
+      }
+    });
+  }
+}
+
+function edit(id) {
+  const team = allTeams.find(team => team.id === id); //id-ul echipei e egal cu id-ul primit ca param
+  console.warn("edit", id, typeof team);
+  editId = id;
+  //acceaseaza inputurile de pe ultimul rand si transmite in ele valoarea pe care o dorim ( de dupa egal)
+  document.getElementById("promotion").value = team.promotion;
+  document.getElementById("members").value = team.members;
+  document.getElementById("name").value = team.name;
+  document.getElementById("url").value = team.url;
 }
 
 function initEvents() {
   const form = document.getElementById("editForm"); //vreau sa ascult formularul
   form.addEventListener("submit", onSubmit); //cand se face submit pe el
-
+  //nu pot da click direct pe x deoarece ei apar mai tarziu decat se executa initEvents()// deci vom asculta un click pe ceva ce exista inainte
+  //sa se incarce si asta este tbody
   document.querySelector("#teams tbody").addEventListener("click", e => {
-    if (e.target.matches("a")) {
+    if (e.target.matches("a.remove-btn")) {
       const id = e.target.dataset.id;
-      deleteTeamRequest(id).then(s => {
-        if (s.success) {
+      deleteTeamRequest(id).then(status => {
+        if (status.success) {
           window.location.reload();
         }
       });
+    } else if (e.target.matches("a.edit-btn")) {
+      const id = e.target.dataset.id;
+      edit(id);
     }
   });
 }
