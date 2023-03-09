@@ -36,15 +36,14 @@ function createTeamRequest(team) {
   );
 }
 
-function readTeam() {
-  return {
-    //impachetez obiectul ca sa se creeze o echipa noua//ce pun in post//ii dau json
-    promotion: document.getElementById("promotion").value, //ce imi da trebuie sa ii dau si eu inapoi citind din formular
-    //trimit valoarea din elementul html
-    members: document.getElementById("members").value,
-    name: document.getElementById("name").value,
-    url: document.getElementById("url").value
-  };
+function updateTeamRequest(team) {
+  return fetch("http://localhost:3000/teams-json/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(readTeam())
+  }).then(r => r.json());
 }
 
 function deleteTeamRequest(id) {
@@ -59,6 +58,17 @@ function deleteTeamRequest(id) {
   }).then(r => {
     return r.json();
   });
+}
+
+function readTeam() {
+  return {
+    //impachetez obiectul ca sa se creeze o echipa noua//ce pun in post//ii dau json
+    promotion: document.getElementById("promotion").value, //ce imi da trebuie sa ii dau si eu inapoi citind din formular
+    //trimit valoarea din elementul html
+    members: document.getElementById("members").value,
+    name: document.getElementById("name").value,
+    url: document.getElementById("url").value
+  };
 }
 
 function displayTeams(teams) {
@@ -86,11 +96,15 @@ function onSubmit(e) {
   // e este primul parametru din orice functie de tip onSubmit,onClick
   //console.warn("submit", e);
   e.preventDefault(); //nu face ceea ce ar face in mod normal (adica sa faca redirect)
-
+  const team = readTeam();
   if (editId) {
-    console.warn("edit");
+    team.id = editId;
+    updateTeamRequest(team).then(status => {
+      if (status.success) {
+        window.location.reload();
+      }
+    });
   } else {
-    const team = readTeam();
     createTeamRequest(team).then(status => {
       //console.warn("status", status);//primim un status si un id
       if (status.success) {
@@ -101,9 +115,9 @@ function onSubmit(e) {
   }
 }
 
-function edit(id) {
+function prepareEdit(id) {
   const team = allTeams.find(team => team.id === id); //id-ul echipei e egal cu id-ul primit ca param
-  console.warn("edit", id, typeof team);
+  //console.warn("edit", id, typeof team);
   editId = id;
   //acceaseaza inputurile de pe ultimul rand si transmite in ele valoarea pe care o dorim ( de dupa egal)
   document.getElementById("promotion").value = team.promotion;
@@ -127,7 +141,7 @@ function initEvents() {
       });
     } else if (e.target.matches("a.edit-btn")) {
       const id = e.target.dataset.id;
-      edit(id);
+      prepareEdit(id);
     }
   });
 }
