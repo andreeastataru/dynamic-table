@@ -114,10 +114,11 @@ function onSubmit(e) {
     createTeamRequest(team).then(status => {
       //console.warn("status", status);//primim un status si un id
       if (status.success) {
+        team.id = status.id;
         //adaug team in allTeams
         allTeams.push();
         //allTeams = [...allTeams, team];
-        displayTeams(teams);
+        displayTeams(allTeams);
         e.target.reset();
       }
     });
