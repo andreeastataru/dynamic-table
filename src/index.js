@@ -107,15 +107,18 @@ function onSubmit(e) {
     console.warn(editId, team);
     updateTeamRequest(team).then(status => {
       if (status.success) {
-        window.location.reload();
+        window.location.reload(); //browserul va face refresh automat ca sa ne apara noile date
       }
     });
   } else {
     createTeamRequest(team).then(status => {
       //console.warn("status", status);//primim un status si un id
       if (status.success) {
-        //daca statusul este true
-        window.location.reload(); //browserul va face refresh automat ca sa ne apara noile date
+        //adaug team in allTeams
+        allTeams.push();
+        //allTeams = [...allTeams, team];
+        displayTeams(teams);
+        e.target.reset();
       }
     });
   }
