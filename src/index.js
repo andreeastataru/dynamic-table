@@ -29,7 +29,7 @@ function createTeamRequest(team) {
       headers: {
         "Content-Type": "application/json" //in ce format transmit date
       },
-      body: JSON.stringify(readTeam())
+      body: JSON.stringify(team)
     })
       //1. Facem requestul => 2. Convertim la json => 3. Asteptam raspunsul care este un status
       .then(r => r.json())
@@ -42,7 +42,7 @@ function updateTeamRequest(team) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(readTeam())
+    body: JSON.stringify(team)
   }).then(r => r.json());
 }
 
@@ -60,6 +60,32 @@ function deleteTeamRequest(id) {
   });
 }
 
+function getTeamsHtml(teams) {
+  return teams
+    .map(
+      //primesc un json si il transform in string
+      team => ` 
+          <tr>
+              <td>${team.promotion}</td>
+              <td>${team.members}</td>
+              <td>${team.name}</td>
+              <td><a class="url" href="${team.url}" target="_blank">${team.url.replace(
+        "https://github.com/",
+        ""
+      )}</a></td>
+              <td>
+                <a data-id="${team.id}" class="remove-btn">✖</a>
+                <a data-id="${team.id}" class="edit-btn">&#9998;</a>
+              </td>
+          </tr>`
+    )
+    .join("");
+}
+
+function displayTeams(teams) {
+  document.querySelector("#teams tbody").innerHTML = getTeamsHtml(teams);
+}
+
 function readTeam() {
   return {
     //impachetez obiectul ca sa se creeze o echipa noua//ce pun in post//ii dau json
@@ -71,29 +97,6 @@ function readTeam() {
   };
 }
 
-function getTeamsHtml(teams) {
-  return teams
-    .map(
-      //primesc un json si il transform in string
-      team => ` 
-      <tr>
-          <td>${team.promotion}</td>
-          <td>${team.members}</td>
-          <td>${team.name}</td>
-          <td>${team.url}</td>
-          <td>
-            <a data-id="${team.id}" class="remove-btn">✖</a>
-            <a data-id="${team.id}" class="edit-btn">&#9998;</a>
-          </td>
-      </tr>`
-    )
-    .join("");
-}
-
-function displayTeams(teams) {
-  document.querySelector("#teams tbody").innerHTML = getTeamsHtml(teams);
-}
-
 function onSubmit(e) {
   // e este primul parametru din orice functie de tip onSubmit,onClick
   //console.warn("submit", e);
@@ -101,6 +104,7 @@ function onSubmit(e) {
   const team = readTeam();
   if (editId) {
     team.id = editId;
+    console.warn(editId, team);
     updateTeamRequest(team).then(status => {
       if (status.success) {
         window.location.reload();
