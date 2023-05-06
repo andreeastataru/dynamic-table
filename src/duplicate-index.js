@@ -36,16 +36,6 @@ function createTeamRequest(team) {
   );
 }
 
-function updateTeamRequest(team) {
-  return fetch("http://localhost:3000/teams-json/update", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(team)
-  }).then(r => r.json());
-}
-
 function deleteTeamRequest(id) {
   // DELETE teams-json/delete
   return fetch("http://localhost:3000/teams-json/delete", {
@@ -58,6 +48,16 @@ function deleteTeamRequest(id) {
   }).then(r => {
     return r.json();
   });
+}
+
+function updateTeamRequest(team) {
+  return fetch("http://localhost:3000/teams-json/update", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(team)
+  }).then(r => r.json());
 }
 
 function getTeamsHtml(teams) {
@@ -131,9 +131,10 @@ function prepareEdit(id) {
 
 function initEvents() {
   const form = document.getElementById("editForm"); //vreau sa ascult formularul
-  form.addEventListener("submit", onSubmit); //cand se face submit pe el
+  form.addEventListener("submit", onSubmit); //cand o functie este neapelata este de fapt referinta la acea functie ( asta e funxtie pe care ar trebui sa mi-o epeleze eventlistenerul)
   //nu pot da click direct pe x deoarece ei apar mai tarziu decat se executa initEvents()// deci vom asculta un click pe ceva ce exista inainte
-  //sa se incarce si asta este tbody
+  //sa se incarce adica tbody
+
   document.querySelector("#teams tbody").addEventListener("click", e => {
     if (e.target.matches("a.remove-btn")) {
       const id = e.target.dataset.id;
