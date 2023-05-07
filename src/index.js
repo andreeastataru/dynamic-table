@@ -8,8 +8,6 @@ import { sleep } from "./utils";
     displayTeams(teams);
   });*/
 
-import { sleep } from "./utils";
-
 let allTeams = [];
 let editId;
 
