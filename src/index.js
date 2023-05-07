@@ -1,3 +1,6 @@
+import { sleep } from "./utils";
+//const utils = require("./utils");
+
 /*fetch("teams.json") //aduce date
   .then((r) => r.json()) //transforma
   .then((teams) => {
@@ -210,3 +213,19 @@ function initEvents() {
 
 loadTeams(); //se va executa mai tarziu decat initEvents()//se porneste si trece la urmatorul
 initEvents(); //nu sta pana se incarca loadTeams()
+
+console.info("sleep");
+sleep(2000).then(r => {
+  console.info("done1", r); //raspunsul e undefined ( ce returneaza functia sleep)//promiseul hotaraste ce imi da mie
+});
+
+(() => {
+  console.info("start");
+})(); // se autoapeleaza datorita parantezelor galbene
+
+(async () => {
+  //am o functie asincrona pt care e posibil sa dureze ce am in interir
+  console.info("start");
+  var r2 = await sleep(2000); //dispare then
+  console.warn("done2", r2); //chiar daca nu este in interiorul lui then se executa dupa 2ms datorita lui await
+})();
