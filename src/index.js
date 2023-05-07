@@ -1,3 +1,4 @@
+import { loadTeamsRequest, createTeamRequest, deleteTeamRequest, updateTeamRequest } from "./requests";
 import { sleep } from "./utils";
 //const utils = require("./utils");
 
@@ -10,56 +11,6 @@ import { sleep } from "./utils";
 
 let allTeams = [];
 let editId;
-
-//aduc datele
-
-function loadTeamsRequest() {
-  return fetch("http://localhost:3000/teams-json", {
-    method: "GET", //cer datele
-    headers: {
-      "Content-type": "application/json" //precizam ca raspunsul serverului va fi in format json
-    }
-  }).then(r => r.json());
-}
-
-function createTeamRequest(team) {
-  return (
-    fetch("http://localhost:3000/teams-json/create", {
-      //se va efectua doar cand dau click pe submit
-      method: "POST", //cum transmit date
-      headers: {
-        "Content-Type": "application/json" //in ce format transmit date
-      },
-      body: JSON.stringify(team)
-    })
-      //1. Facem requestul => 2. Convertim la json => 3. Asteptam raspunsul care este un status
-      .then(r => r.json())
-  );
-}
-
-function deleteTeamRequest(id) {
-  // DELETE teams-json/delete
-  return fetch("http://localhost:3000/teams-json/delete", {
-    //punem return ca sa ne dea raspunsul de la server, nu doar sa faca fetch-ul
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ id }) //stringify il transforma in string iar {} in obiect
-  }).then(r => {
-    return r.json();
-  });
-}
-
-function updateTeamRequest(team) {
-  return fetch("http://localhost:3000/teams-json/update", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(team)
-  }).then(r => r.json());
-}
 
 function getTeamsHtml(teams) {
   return teams
@@ -192,16 +143,21 @@ function initEvents() {
   form.addEventListener("reset", e => {
     editId = undefined;
   });
-  document.querySelector("#teams tbody").addEventListener("click", e => {
+  document.querySelector("#teams tbody").addEventListener("click", async e => {
     //diferentiez tagurile de a prin clase
     if (e.target.matches("a.remove-btn")) {
       const id = e.target.dataset.id; // ia id-ul de pe elementul care s-a dat click// butonul primeste ca id, id-ul echipei
-      deleteTeamRequest(id).then(status => {
-        if (status.success) {
-          //window.location.reload();
-          loadTeams(); //daca sterg ceva se reincarca echipele
-        }
-      });
+      // deleteTeamRequest(id).then(status => {
+      //   if (status.success) {
+      //     //window.location.reload();
+      //     loadTeams(); //daca sterg ceva se reincarca echipele
+      //   }
+      // });
+
+      const status = await deleteTeamRequest(id);
+      if (status.success) {
+        loadTeams();
+      }
     } else if (e.target.matches("a.edit-btn")) {
       const id = e.target.dataset.id;
       prepareEdit(id);
