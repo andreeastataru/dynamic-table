@@ -154,8 +154,9 @@ function initEvents() {
       //   }
       // });
 
-      const status = await deleteTeamRequest(id);
+      const status = await deleteTeamRequest(id); //rezultatul raspunsului asteptat de la deleteTeamRequest il pstrez in variabila status
       if (status.success) {
+        //verific daca are prop success
         loadTeams();
       }
     } else if (e.target.matches("a.edit-btn")) {
