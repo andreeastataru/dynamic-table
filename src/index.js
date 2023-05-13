@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import { loadTeamsRequest, createTeamRequest, deleteTeamRequest, updateTeamRequest } from "./requests";
 import { $, sleep } from "./utils";
 //const utils = require("./utils");
@@ -149,12 +150,15 @@ function initEvents() {
     editId = undefined;
   });
 
-  $("#search").addEventListener("input", e => {
-    const search = e.target.value; //textul pe care il caut
-    const teams = searchTeams(search); //echipele pe care vreau sa le am
-    //console.info("search", search, teams);
-    displayTeams(teams); //va desena echipele noastre
-  });
+  $("#search").addEventListener(
+    "input",
+    debounce(e => {
+      const search = e.target.value; //textul pe care il caut
+      const teams = searchTeams(search); //echipele pe care vreau sa le am
+      //console.info("search", search, teams);
+      displayTeams(teams); //va desena echipele noastre
+    }, 1000)
+  );
 
   $("#teams tbody").addEventListener("click", async e => {
     //diferentiez tagurile de a prin clase
