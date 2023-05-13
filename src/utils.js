@@ -9,3 +9,7 @@ export function sleep(ms) {
     }, ms);
   }); //sa sa rezolve are nevoie de parametrul resolve
 }
+
+export function $(selector) {
+  return document.querySelector(selector);
+}
